@@ -3,7 +3,11 @@ import './App.css';
 
   function App() {
     const [selectedFile, setSelectedFile] = useState(null);
-
+    const [inputText, setInputText] = useState('');
+    const [translatedText, setTranslatedText] = useState('');
+    const [isTranslating, setIsTranslating] = useState(false);
+    const [error, setError] = useState(null);    
+  
     const handleFileChange = (event) => {
       setSelectedFile(event.target.files[0]);
     };
@@ -20,6 +24,42 @@ import './App.css';
     const triggerFileInput = () => {
       document.getElementById('file-input').click();
     };
+
+    const handleInputChange = (event) => {
+    setInputText(event.target.value);
+  };
+
+  const handleTranslate = async () => {
+    if (!inputText.trim()) {
+      setError('Please enter some text to translate.');
+      return;
+    }
+
+    setIsTranslating(true);
+    setError(null);
+
+    try {
+      const response = await fetch('/translate', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ text: inputText })
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Translation failed.');
+      }
+
+      const data = await response.json();
+      setTranslatedText(data.translated);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setIsTranslating(false);
+    }
+  };
 
     return (
       <div className="App">
@@ -61,7 +101,29 @@ import './App.css';
             <button className="minimal-button" onClick={handleSubmit}>Upload</button>
           </div>
         </div>
+        {/* New Section for Translation */}
+      <div className="section lightgrey">
+        <h2>Translate Text</h2>
+        <textarea
+          value={inputText}
+          onChange={handleInputChange}
+          placeholder="Enter text to translate..."
+          rows="4"
+          cols="50"
+        />
+        <br />
+        <button className="minimal-button" onClick={handleTranslate} disabled={isTranslating}>
+          {isTranslating ? 'Translating...' : 'Translate'}
+        </button>
+        {error && <p className="error-message">{error}</p>}
+        {translatedText && (
+          <div className="translated-section">
+            <h3>Translated Text:</h3>
+            <p>{translatedText}</p>
+          </div>
+        )}
       </div>
+        </div>
     );
   }
 
