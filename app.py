@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify, send_from_directory, render_template
 
 from textFromText import translate
+from textToSpeech import genVoice
 
 from flask_cors import CORS
 
@@ -36,6 +37,7 @@ def translate_text():
     original_text = data['text']
     try:
         translated_text = translate(original_text)
+        genVoice(translated_text)
         return jsonify({'translated': translated_text}), 200
     except Exception as e:
         return jsonify({'error': str(e)}), 500
