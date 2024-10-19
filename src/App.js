@@ -39,12 +39,12 @@ import './App.css';
     setError(null);
 
     try {
-      const response = await fetch('/translate', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ text: inputText })
+      const response = await fetch('http://localhost:5000/translate', {  // Updated URL
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ text: inputText })
       });
 
       if (!response.ok) {
