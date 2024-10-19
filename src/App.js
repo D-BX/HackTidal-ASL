@@ -2,8 +2,24 @@ import React, { useState } from 'react';
 import './App.css';
 
   function App() {
-
     const [selectedFile, setSelectedFile] = useState(null);
+
+    const handleFileChange = (event) => {
+      setSelectedFile(event.target.files[0]);
+    };
+  
+    const handleSubmit = () => {
+      if (selectedFile) {
+        console.log("File selected:", selectedFile.name);
+        // thomas upload from here big dawg
+      } else {
+        console.log("No file selected");
+      }
+    };
+
+    const triggerFileInput = () => {
+      document.getElementById('file-input').click();
+    };
 
     return (
       <div className="App">
@@ -39,6 +55,10 @@ import './App.css';
           </div>
           <div className="file-upload">
             <p>Drag and drop a file or browse to upload.</p>
+            <input id="file-input" type="file" onChange={handleFileChange} style={{ display: 'none' }} />
+
+            <button className="minimal-button" onClick={triggerFileInput}>Choose File</button>            {selectedFile && <p>Selected file: {selectedFile.name}</p>}
+            <button className="minimal-button" onClick={handleSubmit}>Upload</button>
           </div>
         </div>
       </div>

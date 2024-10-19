@@ -137,3 +137,30 @@ body, html {
     transform: translateY(0);
   }
 }
+
+.minimal-button {
+  background-color: transparent;
+  border: 2px solid #3171F0;
+  color: #3171F0;
+  padding: 10px 20px;
+  font-size: 16px;
+  font-family: 'Inter', sans-serif;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+}
+
+.minimal-button:hover {
+  background-color: #3171F0;
+  color: white;
+}
+
+.minimal-button:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(49, 113, 240, 0.5);
+}
+
+.minimal-button:active {
+  background-color: #255ab2;
+  border-color: #255ab2;
+}
