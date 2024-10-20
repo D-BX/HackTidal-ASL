@@ -45,8 +45,11 @@ function VideoChat() {
           });
       }, [socket]);
 
-      const toggleRecording = () => {
-        setIsRecording(!isRecording);
+        const toggleRecording = () => {
+            setIsRecording(true);
+        };
+        const toggleRecordingFalse = () => {
+            setIsRecording(false);
         };
 
       return (
@@ -67,7 +70,7 @@ function VideoChat() {
             </div>
             <div className="controls">
                 <button className="control-button mute" onClick={toggleRecording}></button>
-                <button className="control-button video"></button>
+                <button className="control-button video" onClick={toggleRecordingFalse}></button>
                 <button className="control-button share"></button>
                 <Link to="/" className="control-button end-call"></Link>
             </div>

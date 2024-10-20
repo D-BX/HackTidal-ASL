@@ -128,17 +128,6 @@ function App() {
               </div>
             </div>
 
-      {/* File Upload Section */}
-      <div className="section turquoise">
-        <div className="file-upload">
-          <p>Drag and drop a file or browse to upload.</p>
-          <input id="file-input" type="file" onChange={handleFileChange} style={{ display: 'none' }} />
-          <button className="minimal-button" onClick={triggerFileInput}>Choose File</button>
-          {selectedFile && <p>Selected file: {selectedFile.name}</p>}
-          <button className="minimal-button" onClick={handleSubmit}>Upload</button>
-        </div>
-      </div>
-
             {/* Translation Section */}
             <div className="section lightgrey">
               <h2>Translate Text</h2>
