@@ -25,6 +25,7 @@ function App() {
     }
   };
 
+
   const triggerFileInput = () => {
     document.getElementById('file-input').click();
   };
