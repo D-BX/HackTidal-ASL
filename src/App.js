@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './App.css';
 import { BrowserRouter as Router, Route, Link, Routes } from 'react-router-dom';
-import VideoChat from './VideoChat'; // We'll create this component next
+import VideoChat from './VideoChat'; 
 
 
 function App() {
