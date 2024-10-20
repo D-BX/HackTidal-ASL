@@ -59,6 +59,12 @@ function App() {
 
       const data = await response.json();
       setTranslatedText(data.translated);
+      const audioUrl = 'http://localhost:5000' + data.audio_url;
+      const audio = new Audio(audioUrl);
+      audio.play().catch(err => {
+        console.error("Error playing audio:", err);
+      });
+
     } catch (err) {
       setError(err.message);
     } finally {
@@ -119,13 +125,13 @@ function App() {
               <Link to="/video-chat" className="minimal-button">
                 Join Video Chat
               </Link>
-              <div className="file-upload">
+              {/* <div className="file-upload">
                 <p>Drag and drop a file or browse to upload.</p>
                 <input id="file-input" type="file" onChange={handleFileChange} style={{ display: 'none' }} />
                 <button className="minimal-button" onClick={triggerFileInput}>Choose File</button>
                 {selectedFile && <p>Selected file: {selectedFile.name}</p>}
                 <button className="minimal-button" onClick={handleSubmit}>Upload</button>
-              </div>
+              </div> */}
             </div>
 
             {/* Translation Section */}

@@ -6,20 +6,16 @@ import re
 from transformers import AutoImageProcessor, AutoModel
 from tqdm import tqdm
 
-from skimage import filters, morphology, segmentation, color
-from skimage.measure import label
-from skimage.color import rgb2gray
-
-
 import random
 
 from PIL import Image
 import requests
-import kagglehub
 
 import numpy as np
 
 import pandas as pd
+
+#import kagglecord
 
 import decord
 
@@ -32,7 +28,7 @@ import torch.optim as optim
 
 # Download latest version
 #path = kagglehub.dataset_download("risangbaskoro/wlasl-processed")
-path = kagglehub.dataset_download("debashishsau/aslamerican-sign-language-aplhabet-dataset")
+#path = kagglehub.dataset_download("debashishsau/aslamerican-sign-language-aplhabet-dataset")
 
 # %%
 

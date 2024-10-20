@@ -16,9 +16,9 @@ def genVoice(text):
                     Text = text,
                     Engine = 'neural')
 
-    #file = open('speechOutputs/speech.mp3', 'wb')
-    #file.write(response['AudioStream'].read())
-    #file.close()
+    file = open('speechOutputs/speech.mp3', 'wb')
+    file.write(response['AudioStream'].read())
+    file.close()
 
 #genVoice("My name is gavin and I like Thomas more than Sofie")
 
