@@ -8,46 +8,74 @@ body, html {
   text-align: center;
 }
 
-.section.blue {
-  background-color: #3171F0; 
-  color: white;
-  height: 100vh;
+.section {
+  min-height: 80vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   position: relative;
-  z-index: 1;
+  padding: 40px 20px;
+}
+
+@keyframes gradient {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.section.blue {
+  background: linear-gradient(-45deg, #3171F0, #255ab2, #1e90ff, #4169e1);
+  background-size: 400% 400%;
+  animation: gradient 15s ease infinite;
+  color: white;
+  height: 90vh;
+  padding-bottom: 60px;
+}
+
+.section.blue::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, transparent 50%, rgba(255,255,255,0.1) 50%);
+  pointer-events: none;
+}
+
+/* Typing Animation for Title */
+@keyframes typing {
+  from { width: 0 }
+  to { width: 100% }
 }
 
 .title {
-  font-size: 3rem;
-  font-weight: bold;
-  animation: fade-in 2s ease-in-out forwards;
+  overflow: hidden;
+  white-space: nowrap;
+  animation: 
+    typing 4.5s steps(40, end),
+    blink-caret .75s step-end infinite;
 }
 
 .subtitle {
   margin-top: 10px;
+  font-size: 1.2rem;
   animation: fade-in 3s ease-in-out forwards;
+  z-index: 1;
 }
 
 .scroll-message {
   margin-top: 20px;
   font-size: 1.2rem;
   animation: fade-in 5s ease-in-out forwards;
+  z-index: 1;
 }
 
 .section.white {
-  background-color: white;
-  color: black;
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-  margin-top: -20px; 
-  z-index: 0;
+  background-color: #ffff;
+  height: 90vh;
+  color: black; /* Changed to white for better contrast */
 }
 
 .main-message {
@@ -60,35 +88,57 @@ body, html {
 .sub-message {
   font-size: 1.2rem;
   margin-top: 10px;
+  max-width: 800px;
   animation: fade-in 3s ease-in-out forwards;
 }
 
 .section.turquoise {
-  background-color: #70C1B3; 
-  color: black;
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  background-color: #3171F0;
+  height: 95vh;
+  color: white;
   position: relative;
-  margin-top: -10px;
 }
+
+.workflow-title {
+  font-size: 2.5rem;
+  margin-bottom: 40px;
+  position: absolute;
+  top: 40px;
+  left: 40px;
+  text-align: left;
+  text-decoration: underline;
+}
+
+.workflow-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  width: 100%;
+  max-width: 1200px;
+  margin-top: 100px;
+}
+
 
 .workflow {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   width: 70%;
-  font-size: 1.5rem;
-  margin-top: 20px;
 }
 
-.file-upload {
-  margin-top: 30px;
-  border: 2px dashed #fff;
-  padding: 20px;
-  font-size: 1.2rem;
-  background-color: rgba(255, 255, 255, 0.2);
+.workflow-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 18%;
+}
+
+.workflow-image {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 50%;
+  margin-bottom: 10px;
 }
 
 .arrow-container {
@@ -96,11 +146,10 @@ body, html {
   justify-content: center;
   align-items: center;
   height: 100px;
+  margin-top: 20px;
 }
 
 .arrow {
-  position: relative;
-  margin-top: 50px;
   width: 40px;
   height: 40px;
   border-bottom: 2px solid #000;
@@ -108,79 +157,13 @@ body, html {
   transform: rotate(45deg);
   animation: arrowAnimation 1s infinite;
 }
-.asl-hand{
-  width: 300px;
-  height: 300px;
-  position: absolute; 
-  bottom: 0; 
-  right: 0; 
-}
-
-@keyframes arrowAnimation {
-  0% {
-    transform: rotate(45deg) translateY(0);
-  }
-  50% {
-    transform: rotate(45deg) translateY(10px);
-  }
-  100% {
-    transform: rotate(45deg) translateY(0);
-}
-}
-
-@keyframes fade-in {
-  0% {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.minimal-button {
-  background-color: transparent;
-  border: 2px solid #3171F0;
-  color: #3171F0;
-  padding: 10px 20px;
-  font-size: 16px;
-  font-family: 'Inter', sans-serif;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.3s, color 0.3s, border-color 0.3s;
-}
-
-.minimal-button:hover {
-  background-color: #3171F0;
-  color: white;
-}
-
-.minimal-button:focus {
-  outline: none;
-  box-shadow: 0 0 0 3px rgba(49, 113, 240, 0.5);
-}
-
-.minimal-button:active {
-  background-color: #255ab2;
-  border-color: #255ab2;
-}
-
-.workflow {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 70%;
-  font-size: 1.5rem;
-  position: relative;
-}
 
 .arrow-right {
   width: 50px;
   height: 2px;
   background-color: black;
   position: relative;
-  margin: 0 20px;
+  margin: 0 10px;
 }
 
 .arrow-right::before {
@@ -193,7 +176,28 @@ body, html {
   border-bottom: 5px solid transparent;
 }
 
-.goku{
+.asl-hand {
+  width: 300px;
+  height: 300px;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+}
+
+.asl-demonstration {
+  width: 25%;
+}
+
+.asl-demo {
+  width: 126px;
+  max-width: 300px;
+  height: auto;
+  position: absolute;
+  top: 96px;
+  left: 284px;
+}
+
+.goku {
   position: absolute;
   top: 100px;
   left: 150px;
@@ -201,26 +205,172 @@ body, html {
   border-radius: 15%;
 }
 
-.asl-demonstration {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin: 20px 0;
+.talkingppl{
+  position: absolute;
+  bottom: 120px;
+  left: 314px;
+  width: 230px;
+  height: 140px;
+
 }
 
-.asl-demo {
-  width: 100%;
-  max-width: 400px;
-  height: auto;
-  margin-bottom: 10px;
+.talkingtext{
+  position: absolute;
+  width: 400px;
+  font-size: larger;
+  bottom: 60px;
+  left: 224px;
 }
 
-.asl-sentence-input {
-  width: 80%;
-  max-width: 400px;
-  height: 100px;
-  padding: 10px;
-  font-size: 16px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
+.modern-button {
+  background-color: #083da5;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+  text-decoration: none;
+  display: inline-block;
+  margin-top: 40px;
+  margin-bottom: 40px;
+  animation: bounce 2s infinite;
+
+}
+
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-20px);
+  }
+  60% {
+    transform: translateY(-10px);
+  }
+}
+
+.modern-button:hover {
+  background-color: #255ab2;
+  transform: translateY(-2px);
+  animation-play-state: paused;
+
+}
+
+.modern-button:active {
+  transform: translateY(0);
+}
+
+@keyframes arrowAnimation {
+  0% {
+    transform: rotate(45deg) translateY(0);
+  }
+  50% {
+    transform: rotate(45deg) translateY(10px);
+  }
+  100% {
+    transform: rotate(45deg) translateY(0);
+  }
+}
+
+.fade-in {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+.fade-in.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.diagram{
+  height: 600px;
+  width: 800px;
+  position: relative;
+  right: -250px;
+  top: 60px;
+}
+
+@media (max-width: 748px) {
+  .section.blue {
+    background: linear-gradient(105deg, #3171F0 70%, white 70%);
+  }
+
+  .workflow-title {
+    position: static;
+    margin-bottom: 20px;
+  }
+
+  .workflow-container {
+    margin-top: 0;
+  }
+}
+
+@media (max-width: 1200px) {
+  .workflow-container {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .workflow {
+    width: 100%;
+    margin-bottom: 40px;
+  }
+
+  .asl-demonstration {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 768px) {
+  .workflow {
+    flex-direction: column;
+  }
+
+  .workflow-step {
+    width: 100%;
+    margin-bottom: 20px;
+  }
+
+  .arrow-right {
+    transform: rotate(90deg);
+    margin: 20px 0;
+  }
+
+  .goku, .asl-hand {
+    display: none;
+  }
+}
+
+.section.why-we-did-it {
+  background-color: #ffffff;
+  min-height: 60vh;
+  padding: 60px 20px;
+}
+
+.why-description {
+  font-size: 1.2rem;
+  max-width: 800px;
+  margin: 0 auto;
+  line-height: 1.6;
+  color: #333;
+}
+
+@media (max-width: 768px) {
+  .section.why-we-did-it {
+    padding: 40px 20px;
+  }
+
+  .section-title {
+    font-size: 2rem;
+  }
+
+  .why-description {
+    font-size: 1rem;
+  }
 }
