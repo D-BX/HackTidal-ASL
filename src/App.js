@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.css';
 import { BrowserRouter as Router, Route, Link, Routes } from 'react-router-dom';
 import VideoChat from './VideoChat'; 
@@ -6,33 +6,24 @@ import VideoChat from './VideoChat';
 
 
 function App() {
-  const [selectedFile, setSelectedFile] = useState(null);
   const [inputText, setInputText] = useState('');
   const [translatedText, setTranslatedText] = useState('');
   const [isTranslating, setIsTranslating] = useState(false);
   const [error, setError] = useState(null);
 
-  const handleFileChange = (event) => {
-    setSelectedFile(event.target.files[0]);
-  };
+  useEffect(() => {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.1 });
 
-  const handleSubmit = () => {
-    if (selectedFile) {
-      console.log("File selected:", selectedFile.name);
-      // Upload logic goes here
-    } else {
-      console.log("No file selected");
-    }
-  };
+    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
 
-
-  const triggerFileInput = () => {
-    document.getElementById('file-input').click();
-  };
-
-  const handleInputChange = (event) => {
-    setInputText(event.target.value);
-  };
+    return () => observer.disconnect();
+  }, []);
 
   const handleTranslate = async () => {
     if (!inputText.trim()) {
@@ -71,78 +62,65 @@ function App() {
       <Routes>
         <Route path="/" element={
           <div className="App">
-            {/* ASLINATOR Section */}
-            <div className="section blue">
-              <img className="goku" src="/IMG_1932.JPG" alt="ASL Clipart" />
-              <h1 className="title">ASLINATOR</h1>
-              <p className="subtitle">ASL modernized to futuristic needs!</p>
-              <p className="scroll-message">Scroll down to see what we mean.</p>
-              <div className="arrow-container">
-                <div className="arrow"></div>
-              </div>
-              <img className="asl-hand" src="/aslClipartnobg.png" alt="ASL Clipart" />
+          {/* ASLINATOR Section */}
+          <div className="section blue">
+            <h1 className="title fade-in">ASL Translationer</h1>
+            <p className="subtitle fade-in">Figuring out the modernization of ASL translation.</p>
+            <p className="scroll-message fade-in">Scroll down to see what we mean:</p>
+            <div className="arrow-container">
+              <div className="arrow"></div>
             </div>
+            <img className="asl-hand" src="/aslClipartnobg.png" alt="ASL Clipart" />
+          </div>
 
-            {/* AI Section */}
-            <div className="section white">
-              <p className="main-message">
-                We live in a world where the power of AI is unimaginable.
-              </p>
-              <p className="sub-message">
-                How can we leave those with disabilities behind? We want to be able to translate ASL from signs to English, furthering inclusivity.
-              </p>
-              <p className="sub-message">
-                Being able to go from ASL to formed English sentences hasn't been seen before but our aim is to make it happen.
-              </p>
-              <div className="arrow-container">
-                <div className="arrow"></div>
-              </div>
+          {/* AI Section */}
+          <div className="section white">
+            <p className="main-message fade-in">
+              We live in a world where the power of AI is unimaginable.
+            </p>
+            <p className="sub-message fade-in">
+              How can we leave those with disabilities behind? We want to be able to translate ASL from signs to English, furthering inclusivity.
+            </p>
+            <p className="sub-message fade-in">
+              Being able to go from ASL to formed English sentences hasn't been seen before but our aim is to make it happen.
+            </p>
+            <div className="arrow-container">
+              <div className="arrow"></div>
             </div>
+          </div>
 
-            {/* Workflow Section */}
-            <div className="section turquoise">
-              <h2>Here's how it works:</h2>
-              <div className="workflow">
-                <div>ASL Sentence</div>
-                <div className="arrow-right"></div>
-                <div>DINO V2</div>
-                <div className="arrow-right"></div>
-                <div>Direct ASL Transcription</div>
-                <div className="arrow-right"></div>
-                <div>LLM</div>
-                <div className="arrow-right"></div>
-                <div>Text to Speech/Text</div>
-              </div>
-              <div className="asl-demonstration">
-                <img src="/handsigns.gif" alt="ASL demonstration" className="asl-demo" />
-              </div>
-              <Link to="/video-chat" className="minimal-button">
-                Join Video Chat
-              </Link>
-            </div>
-
-            {/* Translation Section */}
-            <div className="section lightgrey">
-              <h2>Translate Text</h2>
-              <textarea
-                value={inputText}
-                onChange={handleInputChange}
-                placeholder="Enter text to translate..."
-                rows="4"
-                cols="50"
-              />
-              <br />
-              <button className="minimal-button" onClick={handleTranslate} disabled={isTranslating}>
-                {isTranslating ? 'Translating...' : 'Translate'}
-              </button>
-              {error && <p className="error-message">{error}</p>}
-              {translatedText && (
-                <div className="translated-section">
-                  <h3>Translated Text:</h3>
-                  <p>{translatedText}</p>
+          {/* Workflow Section */}
+          <div className="section turquoise">
+            <h1 className="workflow-title fade-in">Here's how it works:</h1>
+            <div className="workflow-container fade-in">
+                <div className="workflow">
+                    <img src="/diagram.png" alt="big diagram" className='diagram' />
                 </div>
-              )}
+                <div className="asl-demonstration">
+                  <img src="/handsigns.gif" alt="ASL demonstration" className="asl-demo" />
+                </div>
+              </div>
+              <div className="arrow-container">
+                <div className="arrow"></div>
+              </div>
+              <img src="/talkingppl.gif" alt='people talking' className='talkingppl'></img>
+              <p className="talkingtext">Text to speech in English</p>
+
             </div>
+
+            {/* Why We Did It Section */}
+            <div className="section why-we-did-it">
+              <h1 className="section-title fade-in">Why We Did It</h1>
+              <p className="why-description fade-in">
+                Our hackathon project is a Live ASL Translator. The goal is to help deaf people communicate more easily in work teams with hearing individuals. Our goal is to translate sign language into speech in near real time, making it easier for people with disabilities to participate fully in the workplace. It promotes inclusivity and accessibility, so everyone can work together without barriers.
+              </p>
+            </div>
+            <div className="arrow-container">
+              <div className="arrow"></div>
+            </div>
+            <Link to="/video-chat" className="modern-button fade-in">
+                Join Video Chat
+            </Link>
           </div>
         } />
         <Route path="/video-chat" element={<VideoChat />} />
