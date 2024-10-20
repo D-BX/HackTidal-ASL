@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify, send_from_directory, render_template
 
 from textFromText import translate
+from textToSpeech import genVoice
 
 from flask_cors import CORS
 
@@ -18,6 +19,13 @@ def serve_react_app():
 def serve_static_files(path):
     return send_from_directory('public', path)
 
+
+
+@app.route('/test', methods=['GET'])
+def test_route():
+    return 'Flask server is running!', 200
+
+
 @app.route('/translate', methods=['POST'])
 def translate_text():
     try:
@@ -27,9 +35,10 @@ def translate_text():
 
         original_text = data['text']
         translated_text = translate(original_text)
+        genVoice(translated_text)
         return jsonify({'translated': translated_text}), 200
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
 if __name__ == '__main__':
-    app.run(host='127.0.0.1', port=5000, debug=True)
+    app.run(host='0.0.0.0', port=5000, debug=True)
