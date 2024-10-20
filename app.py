@@ -12,11 +12,12 @@ import os
 
 secret_key = os.urandom(24)
 
-app = Flask(__name__, static_folder='public', template_folder='public')
 
+app = Flask(__name__, static_folder='public', template_folder='public')
+app.config['SECRET_KEY'] = secret_key  # Required for Flask-SocketIO
 
 CORS(app)  # Enable CORS for all routes
-
+socketio = SocketIO(app, cors_allowed_origins="*")
 
 # Serve React App (index.html from the public folder)
 @app.route('/')
