@@ -13,10 +13,10 @@ import os
 secret_key = os.urandom(24)
 
 app = Flask(__name__, static_folder='public', template_folder='public')
-app.config['SECRET_KEY'] = secret_key
+
 
 CORS(app)  # Enable CORS for all routes
-socketio = SocketIO(app, cors_allowed_origins="*")  # Initialize Socket.IO with CORS allowed
+
 
 # Serve React App (index.html from the public folder)
 @app.route('/')
@@ -37,12 +37,12 @@ def test_route():
 
 @app.route('/translate', methods=['POST'])
 def translate_text():
-    data = request.get_json()
-    if not data or 'text' not in data:
-        return jsonify({'error': 'No text provided'}), 400
-
-    original_text = data['text']
     try:
+        data = request.get_json()
+        if not data or 'text' not in data:
+            return jsonify({'error': 'No text provided'}), 400
+
+        original_text = data['text']
         translated_text = translate(original_text)
         genVoice(translated_text)
         return jsonify({'translated': translated_text}), 200

@@ -1,0 +1,115 @@
+.video-chat-container {
+    background-color: #40E0D0; /* Turquoise background */
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    padding: 40px;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .video-background {
+    background-color: #333; /* Dark gray background */
+    border-radius: 15px;
+    padding: 30px;
+    position: relative;
+    width: 90vw;
+    max-width: 1400px;
+    aspect-ratio: 16 / 9;
+  }
+  
+  .window-controls {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    display: flex;
+    gap: 15px;
+  }
+  
+  .window-control {
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .window-control.green { background-color: #4CAF50; }
+  .window-control.yellow { background-color: #FFEB3B; }
+  .window-control.red { background-color: #F44336; }
+  
+  .video-grid {
+    height: 100%;
+  }
+  
+  .video-item {
+    background-color: #000;
+    border-radius: 10px;
+    overflow: hidden;
+    position: relative;
+    height: 100%;
+  }
+  
+  .video-item video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  .participant-name {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    color: #fff;
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 8px 15px;
+    border-radius: 5px;
+    font-size: 18px;
+  }
+  
+  .controls {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin-top: 30px;
+  }
+  
+  .control-button {
+    width: 60px;
+    height: 60px;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .control-button.mute { background-color: #2196F3; }
+  .control-button.video { background-color: #4CAF50; }
+  .control-button.share { background-color: #FFC107; }
+  .control-button.end-call { 
+    background-color: #F44336;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+  }
+  
+  .control-button:hover {
+    opacity: 0.8;
+  }
+  
+  @media (max-width: 768px) {
+    .video-background {
+      width: 95vw;
+      padding: 20px;
+    }
+  
+    .controls {
+      gap: 15px;
+    }
+  
+    .control-button {
+      width: 50px;
+      height: 50px;
+    }
+  }
