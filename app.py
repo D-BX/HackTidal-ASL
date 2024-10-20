@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify, send_from_directory, render_template
 from flask_cors import CORS
 
+from textFromText import recombin_str
 from textFromText import translate
 from textToSpeech import genVoice
 
@@ -25,7 +26,7 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 dino = AutoModel.from_pretrained('facebook/dinov2-base').to(device)
 dino_dim = 768
 
-
+active_inference = False
 class CharacterPredictor:
     def __init__(self, window_size=10, threshold=0.8):
         """
@@ -80,7 +81,7 @@ class LinearClassifier(nn.Module):
 #        return self.linear2(self.relu(self.linear(x)))
         return self.linear(x)
 
-model = torch.load("day2_2.pt")
+model = torch.load("../love3.pt")
 
 app = Flask(__name__, static_folder='public', template_folder='public')
 app.config['SECRET_KEY'] = secret_key
@@ -99,7 +100,6 @@ def serve_static_files(path):
     return send_from_directory('public', path)
 
 
-
 @app.route('/test', methods=['GET'])
 def test_route():
     return 'Flask server is running!', 200
@@ -109,10 +109,16 @@ def serve_audio_file(filename):
     return send_from_directory('speechOutputs', filename)
 
 def convert_text(original_text):
+    global active_inference
+    global recombin_str
     try:
         # Translate the text
         print(original_text)
-        translated_text = translate("iloveyou")
+        if not active_inference:
+            translated_text = translate(recombin_str)
+            active_inference = True
+        else:
+            translated_text = translate(original_text + original_text + original_text)
         print(f"Translated text: {translated_text}")
 
         # Generate speech and save as 'speech.mp3' in AUDIO_DIR
@@ -132,6 +138,7 @@ def convert_text(original_text):
 @app.route('/endRecording', methods=['POST'])
 def endRecording():
     global total_str
+    print(total_str)
     output = convert_text(total_str)
     total_str = ""
     return output

@@ -9,9 +9,9 @@ client = OpenAI(api_key=key)
 def translate(transcript):
   completion = client.chat.completions.create(
     model="gpt-4o-mini",
-    temperature=0.3,
+    temperature=0.2,
     messages=[
-      {"role": "system", "content": "Given this ASL sentence, with each word transcribed directly to its English counterpart, translate it to spoken english:"},
+      {"role": "system", "content": "Given this sequence of letters stitch the words together into a sentence. Be aware of mispellings. Only return that sentence. "},
       {"role": "user", "content": f"{transcript}"},
     ]
   )
@@ -24,3 +24,6 @@ if __name__ == "__main__":
     test_transcript = "tomorrow i go to store"
     result = translate(test_transcript)
     print("Translation Result:", result)
+
+# Testing
+recombin_str = "iloveyou"
