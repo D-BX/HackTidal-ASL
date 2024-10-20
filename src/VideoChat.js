@@ -8,6 +8,7 @@ function VideoChat() {
     const videoRef = useRef(null);
     const canvasRef = useRef(null);
     const [socket, setSocket] = useState(null);
+    const [isRecording, setIsRecording] = useState(false);
 
     useEffect(() => {
         const newSocket = io('http://localhost:5000'); // Replace with your backend URL if different
@@ -44,6 +45,13 @@ function VideoChat() {
           });
       }, [socket]);
 
+        const toggleRecording = () => {
+            setIsRecording(true);
+        };
+        const toggleRecordingFalse = () => {
+            setIsRecording(false);
+        };
+
       return (
         <div className="video-chat-container">
             <div className="video-background">
@@ -61,8 +69,8 @@ function VideoChat() {
                 </div>
             </div>
             <div className="controls">
-                <button className="control-button mute"></button>
-                <button className="control-button video"></button>
+                <button className="control-button mute" onClick={toggleRecording}></button>
+                <button className="control-button video" onClick={toggleRecordingFalse}></button>
                 <button className="control-button share"></button>
                 <Link to="/" className="control-button end-call"></Link>
             </div>
