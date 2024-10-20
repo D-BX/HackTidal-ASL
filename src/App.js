@@ -50,6 +50,12 @@ function App() {
 
       const data = await response.json();
       setTranslatedText(data.translated);
+      const audioUrl = 'http://localhost:5000' + data.audio_url;
+      const audio = new Audio(audioUrl);
+      audio.play().catch(err => {
+        console.error("Error playing audio:", err);
+      });
+
     } catch (err) {
       setError(err.message);
     } finally {

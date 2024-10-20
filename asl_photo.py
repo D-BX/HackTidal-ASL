@@ -6,20 +6,16 @@ import re
 from transformers import AutoImageProcessor, AutoModel
 from tqdm import tqdm
 
-from skimage import filters, morphology, segmentation, color
-from skimage.measure import label
-from skimage.color import rgb2gray
-
-
 import random
 
 from PIL import Image
 import requests
-import kagglehub
 
 import numpy as np
 
 import pandas as pd
+
+#import kagglecord
 
 import decord
 
@@ -32,7 +28,7 @@ import torch.optim as optim
 
 # Download latest version
 #path = kagglehub.dataset_download("risangbaskoro/wlasl-processed")
-path = kagglehub.dataset_download("debashishsau/aslamerican-sign-language-aplhabet-dataset")
+#path = kagglehub.dataset_download("debashishsau/aslamerican-sign-language-aplhabet-dataset")
 
 # %%
 
@@ -149,6 +145,58 @@ for epoch in range(num_epochs):
     
     # Print loss after every epoch or at intervals
     print(f'Epoch [{epoch+1}/{num_epochs}], Loss: {total_loss / len(instances):.4f}')
+
+torch.save(model, "prefinetune.pt")
+
+# %%
+
+fine_tune_instances = []
+
+fine_pattern = r'([a-zA-Z])1\.jpg'
+for file in os.listdir('photo/'):
+    match = re.match(fine_pattern, file)
+    print(file)
+    if match:
+        letter = match.group(1)      # The captured letter (first group)
+        fine_tune_instances.append(((ord(letter) - ord('a')), 'photo/' + file))
+
+random.shuffle(fine_tune_instances)
+
+# %%
+
+for epoch in range(3):
+    model.train()
+    
+    total_loss = 0
+
+    labels, image_paths = tuple(map(list, zip(*fine_tune_instances)))
+
+    for i in tqdm(range(0, len(fine_tune_instances), 8)):
+        image_file_batch = image_paths[i:i + batch_size]
+        images = [extract_photo(image_file) for image_file in image_file_batch]
+        images = torch.stack(images, dim=1)[0]
+        this_batch_size = images.shape[0]
+
+        label_batch = labels[i:i + batch_size]
+        label_batch = torch.tensor(label_batch, device=device)
+
+        with torch.no_grad():
+            embeds = dino(images.to(device)).last_hidden_state[:, 0, :].reshape(this_batch_size, dino_dim)
+
+        predicts = model(embeds)
+
+        loss = criterion(predicts, label_batch)
+
+        # Backward pass and optimization
+        optimizer.zero_grad()
+        loss.backward()
+        optimizer.step()
+        
+        # Accumulate loss for reporting
+        total_loss += loss.item()
+    
+    # Print loss after every epoch or at intervals
+    print(f'Epoch [{epoch+1}/{num_epochs}], Loss: {total_loss / len(instances):.4f}')
 # %%
 
 labels, image_paths = tuple(map(list, zip(*test_instances)))
@@ -167,11 +215,11 @@ for i in tqdm(range(0, len(test_instances), batch_size)):
     with torch.no_grad():
         embeds = dino(images.to(device)).last_hidden_state[:, 0, :].reshape(this_batch_size, dino_dim)
 
-    predicts = model(embeds)
-    predicted_classes = predicts.max(dim=1).indices
-    correct = (predicted_classes == label_batch).sum()
+        predicts = model(embeds)
+        predicted_classes = predicts.max(dim=1).indices
+        correct = (predicted_classes == label_batch).sum()
 
-    total_correct += correct
+        total_correct += correct
 
 print(total_correct / len(test_instances))
 
@@ -189,8 +237,46 @@ def predict_image(image_tensor):
     predicted_class = predict.max(dim=1).indices
     return chr(ord('A') + predicted_class[0])
 
-
 photo = extract_photo("B_clear.jpg")
 guess = predict_image(photo)
 print(guess)
+# %%
+
+
+test_fine_insts = []
+
+fine_pattern2 = r'([a-zA-Z])2\.jpg'
+for file in os.listdir('photo/'):
+    match = re.match(fine_pattern2, file)
+    if match:
+        letter = match.group(1)      # The captured letter (first group)
+        test_fine_insts.append(((ord(letter) - ord('a')), 'photo/' + file))
+
+random.shuffle(test_fine_insts)
+
+# %%
+
+labels, image_paths = tuple(map(list, zip(*test_fine_insts)))
+
+total_correct = 0
+
+for i in tqdm(range(0, len(test_fine_insts), batch_size)):
+    image_file_batch = image_paths[i:i + batch_size]
+    images = [extract_photo(image_file) for image_file in image_file_batch]
+    images = torch.stack(images, dim=1)[0]
+    this_batch_size = images.shape[0]
+
+    label_batch = labels[i:i + batch_size]
+    label_batch = torch.tensor(label_batch, device=device)
+
+    with torch.no_grad():
+        embeds = dino(images.to(device)).last_hidden_state[:, 0, :].reshape(this_batch_size, dino_dim)
+
+        predicts = model(embeds)
+        predicted_classes = predicts.max(dim=1).indices
+        correct = (predicted_classes == label_batch).sum()
+
+        total_correct += correct
+
+print(total_correct / len(test_fine_insts))
 # %%

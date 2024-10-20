@@ -3,6 +3,29 @@ import { Link } from 'react-router-dom';
 import './VideoChat.css';
 import io from 'socket.io-client';
 
+async function endTranslation() {
+    const response = await fetch('http://localhost:5000/endRecording', {  // Updated URL
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: "this"
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Translation failed.');
+      }
+
+      const data = await response.json();
+      console.log(data)
+      const audioUrl = 'http://localhost:5000' + data.audio_url;
+      const audio = new Audio(audioUrl);
+      console.log(audioUrl)
+      audio.play().catch(err => {
+        console.error("Error playing audio:", err);
+      });
+}
 
 function VideoChat() {
     const videoRef = useRef(null);
@@ -29,7 +52,7 @@ function VideoChat() {
     
             // Capture frames at regular intervals and send to backend
             const interval = setInterval(() => {
-              if (canvasRef.current && videoRef.current && socket) {
+              if (canvasRef.current && videoRef.current && socket && isRecording) {
                 const context = canvasRef.current.getContext('2d');
                 context.drawImage(videoRef.current, 0, 0, canvasRef.current.width, canvasRef.current.height);
                 const imageData = canvasRef.current.toDataURL('image/jpeg');
@@ -43,13 +66,15 @@ function VideoChat() {
           .catch((err) => {
             console.error("Error accessing webcam: ", err);
           });
-      }, [socket]);
+      }, [socket,isRecording]);
 
         const toggleRecording = () => {
             setIsRecording(true);
+            console.log('set to true')
         };
         const toggleRecordingFalse = () => {
             setIsRecording(false);
+            console.log('set to false')
         };
 
       return (
@@ -71,12 +96,11 @@ function VideoChat() {
             <div className="controls">
                 <button className="control-button mute" onClick={toggleRecording}></button>
                 <button className="control-button video" onClick={toggleRecordingFalse}></button>
-                <button className="control-button share"></button>
+                <button className="control-button share" onClick={endTranslation}></button>
                 <Link to="/" className="control-button end-call"></Link>
             </div>
         </div>
     );
 }
-
 
 export default VideoChat;
