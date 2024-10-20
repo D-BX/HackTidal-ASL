@@ -3,7 +3,9 @@ from flask_cors import CORS
 
 from textFromText import translate
 from textToSpeech import genVoice
-
+import numpy as np
+import torch
+import torchvision.transforms as transforms
 from flask_socketio import SocketIO, emit
 import base64
 from io import BytesIO
