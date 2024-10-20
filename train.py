@@ -122,22 +122,39 @@ def sample_video_to_images(video_path, frame_rate=1, output_folder="video_frames
     return images
 
 instances = []
-for file in os.listdir('HackTidal-ASL/new_videos'):
+for file in os.listdir('HackTidal-ASL/love'):
     print(file)
     short_name = file.split('.')[0]
     if (short_name == 'Space'):
         continue
 
-    if (short_name == 'X'):
+    if not (short_name in 'ILOVEYU'):
         continue
-    frames = sample_video_to_images("HackTidal-ASL/new_videos/" + file, frame_rate=0.5)  # Extract 1 frame per second
+
+    frames = sample_video_to_images("HackTidal-ASL/love/" + file, frame_rate=0.5)  # Extract 1 frame per second
     new_insts = [((ord(short_name) - ord('A'), frame)) for frame in frames]
 
     instances.extend(new_insts)
 
-null_images = sample_video_to_images("HackTidal-ASL/new_videos/Space.mp4", frame_rate=0.5)
+"""
+for file in os.listdir('HackTidal-ASL/videos'):
+    print(file)
+    short_name = file.split('.')[0]
+    if (short_name == 'Space'):
+        continue
+
+    if not (short_name in 'ILOVEYU'):
+        continue
+
+    frames = sample_video_to_images("HackTidal-ASL/videos/" + file, frame_rate=0.5)  # Extract 1 frame per second
+    new_insts = [((ord(short_name) - ord('A'), frame)) for frame in frames]
+
+    instances.extend(new_insts)
+
+null_images = sample_video_to_images("HackTidal-ASL/videos/Space.mp4", frame_rate=0.5)
 null_frames = [(26, null_image) for null_image in null_images]
 instances.extend(null_frames)
+"""
 
 # %%
 
@@ -165,7 +182,7 @@ criterion = nn.CrossEntropyLoss()
 optimizer = optim.Adam(model.parameters(), lr=learning_rate)
 
 # Training loop
-for epoch in range(5):
+for epoch in range(4):
     model.train()
     
     total_loss = 0
@@ -234,7 +251,7 @@ print(f"Accuracy estimate: {total_correct / len(test_inst)}")
 # Print loss after every epoch or at intervals
 # %%
 
-model = torch.load("new2.pt")
+model = torch.load("love.pt")
 def predict_image(image_tensor):
     print(image_tensor.shape)
 
