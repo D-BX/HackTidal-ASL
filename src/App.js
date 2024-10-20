@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
 import './App.css';
+import { BrowserRouter as Router, Route, Link, Routes } from 'react-router-dom';
+import VideoChat from './VideoChat'; // We'll create this component next
+
 
 function App() {
   const [selectedFile, setSelectedFile] = useState(null);
@@ -39,7 +42,7 @@ function App() {
     setError(null);
 
     try {
-      const response = await fetch('/translate', {
+      const response = await fetch('http://localhost:5000/translate', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -62,88 +65,94 @@ function App() {
   };
 
   return (
-    <div className="App">
-      {/* ASLINATOR Section */}
-      <div className="section blue">
-        <img className="goku" src="/IMG_1932.JPG" alt="ASL Clipart" />
-        <h1 className="title">ASLINATOR</h1>
-        <p className="subtitle">ASL modernized to futuristic needs!</p>
-        <p className="scroll-message">Scroll down to see what we mean.</p>
-        <div className="arrow-container">
-          <div className="arrow"></div>
-        </div>
-        <img className="asl-hand" src="/aslClipartnobg.png" alt="ASL Clipart" />
-      </div>
+    <Router>
+      <Routes>
+        <Route path="/" element={
+          <div className="App">
+            {/* ASLINATOR Section */}
+            <div className="section blue">
+              <img className="goku" src="/IMG_1932.JPG" alt="ASL Clipart" />
+              <h1 className="title">ASLINATOR</h1>
+              <p className="subtitle">ASL modernized to futuristic needs!</p>
+              <p className="scroll-message">Scroll down to see what we mean.</p>
+              <div className="arrow-container">
+                <div className="arrow"></div>
+              </div>
+              <img className="asl-hand" src="/aslClipartnobg.png" alt="ASL Clipart" />
+            </div>
 
-      {/* AI Section */}
-      <div className="section white">
-        <p className="main-message">
-          We live in a world where the power of AI is unimaginable.
-        </p>
-        <p className="sub-message">
-          How can we leave those with disabilities behind? We want to be able to translate ASL from signs to English, furthering inclusivity.
-        </p>
-        <p className="sub-message">
-          Being able to go from ASL to formed English sentences hasn't been seen before but our aim is to make it happen.
-        </p>
-        <div className="arrow-container">
-          <div className="arrow"></div>
-        </div>
-      </div>
+            {/* AI Section */}
+            <div className="section white">
+              <p className="main-message">
+                We live in a world where the power of AI is unimaginable.
+              </p>
+              <p className="sub-message">
+                How can we leave those with disabilities behind? We want to be able to translate ASL from signs to English, furthering inclusivity.
+              </p>
+              <p className="sub-message">
+                Being able to go from ASL to formed English sentences hasn't been seen before but our aim is to make it happen.
+              </p>
+              <div className="arrow-container">
+                <div className="arrow"></div>
+              </div>
+            </div>
 
-      {/* Workflow Section */}
-      <div className="section turquoise">
-        <h2>Here's how it works:</h2>
-        <div className="workflow">
-          <div>ASL Sentence</div>
-          <div className="arrow-right"></div>
-          <div>DINO V2</div>
-          <div className="arrow-right"></div>
-          <div>Direct ASL Transcription</div>
-          <div className="arrow-right"></div>
-          <div>LLM</div>
-          <div className="arrow-right"></div>
-          <div>Text to Speech/Text</div>
-        </div>
-        <div className="asl-demonstration">
-          <img src="/handsigns.gif" alt="ASL demonstration" className="asl-demo" />
-        </div>
-      </div>
+            {/* Workflow Section */}
+            <div className="section turquoise">
+              <h2>Here's how it works:</h2>
+              <div className="workflow">
+                <div>ASL Sentence</div>
+                <div className="arrow-right"></div>
+                <div>DINO V2</div>
+                <div className="arrow-right"></div>
+                <div>Direct ASL Transcription</div>
+                <div className="arrow-right"></div>
+                <div>LLM</div>
+                <div className="arrow-right"></div>
+                <div>Text to Speech/Text</div>
+              </div>
+              <div className="asl-demonstration">
+                <img src="/handsigns.gif" alt="ASL demonstration" className="asl-demo" />
+              </div>
+              <Link to="/video-chat" className="minimal-button">
+                Join Video Chat
+              </Link>
+              <div className="file-upload">
+                <p>Drag and drop a file or browse to upload.</p>
+                <input id="file-input" type="file" onChange={handleFileChange} style={{ display: 'none' }} />
+                <button className="minimal-button" onClick={triggerFileInput}>Choose File</button>
+                {selectedFile && <p>Selected file: {selectedFile.name}</p>}
+                <button className="minimal-button" onClick={handleSubmit}>Upload</button>
+              </div>
+            </div>
 
-      {/* File Upload Section */}
-      <div className="section turquoise">
-        <div className="file-upload">
-          <p>Drag and drop a file or browse to upload.</p>
-          <input id="file-input" type="file" onChange={handleFileChange} style={{ display: 'none' }} />
-          <button className="minimal-button" onClick={triggerFileInput}>Choose File</button>
-          {selectedFile && <p>Selected file: {selectedFile.name}</p>}
-          <button className="minimal-button" onClick={handleSubmit}>Upload</button>
-        </div>
-      </div>
-
-      {/* Translation Section */}
-      <div className="section lightgrey">
-        <h2>Translate Text</h2>
-        <textarea
-          value={inputText}
-          onChange={handleInputChange}
-          placeholder="Enter text to translate..."
-          rows="4"
-          cols="50"
-        />
-        <br />
-        <button className="minimal-button" onClick={handleTranslate} disabled={isTranslating}>
-          {isTranslating ? 'Translating...' : 'Translate'}
-        </button>
-        {error && <p className="error-message">{error}</p>}
-        {translatedText && (
-          <div className="translated-section">
-            <h3>Translated Text:</h3>
-            <p>{translatedText}</p>
+            {/* Translation Section */}
+            <div className="section lightgrey">
+              <h2>Translate Text</h2>
+              <textarea
+                value={inputText}
+                onChange={handleInputChange}
+                placeholder="Enter text to translate..."
+                rows="4"
+                cols="50"
+              />
+              <br />
+              <button className="minimal-button" onClick={handleTranslate} disabled={isTranslating}>
+                {isTranslating ? 'Translating...' : 'Translate'}
+              </button>
+              {error && <p className="error-message">{error}</p>}
+              {translatedText && (
+                <div className="translated-section">
+                  <h3>Translated Text:</h3>
+                  <p>{translatedText}</p>
+                </div>
+              )}
+            </div>
           </div>
-        )}
-      </div>
-    </div>
+        } />
+        <Route path="/video-chat" element={<VideoChat />} />
+      </Routes>
+    </Router>
   );
 }
 

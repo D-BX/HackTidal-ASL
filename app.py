@@ -5,9 +5,7 @@ from textFromText import translate
 from flask_cors import CORS
 
 app = Flask(__name__, static_folder='public', template_folder='public')
-
-
-CORS(app)  # Enable CORS for all routes
+CORS(app, resources={r"/translate": {"origins": "http://localhost:3000"}})
 
 
 # Serve React App (index.html from the public folder)
@@ -22,12 +20,12 @@ def serve_static_files(path):
 
 @app.route('/translate', methods=['POST'])
 def translate_text():
-    data = request.get_json()
-    if not data or 'text' not in data:
-        return jsonify({'error': 'No text provided'}), 400
-
-    original_text = data['text']
     try:
+        data = request.get_json()
+        if not data or 'text' not in data:
+            return jsonify({'error': 'No text provided'}), 400
+
+        original_text = data['text']
         translated_text = translate(original_text)
         return jsonify({'translated': translated_text}), 200
     except Exception as e:
